@@ -11,6 +11,19 @@ public class Tracker {
         return tracker;
     }
 
+    public void addPeer(Peer peer) {
+        tracker.add(peer);
+    }
+
+    public Peer getPeerByID(int id) {
+        for (Peer p : tracker) {
+            if (p.getPeerID() == id) {
+                return p;
+            }
+        }
+        return null;
+    }
+
     ArrayList<Peer> getNeighboringPeers(Peer peer) {
         ArrayList<Peer> neighbors = new ArrayList<>();
         for (Peer p : tracker) { // filters out given peer from tracker
