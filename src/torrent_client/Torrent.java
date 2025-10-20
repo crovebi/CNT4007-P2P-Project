@@ -47,7 +47,7 @@ public class Torrent {
                 System.out.println("An error occurred while reading input.");
                 e.printStackTrace();
             }
-            Peer p2 = tracker.getPeer(peerConnectionID);
+            Peer p2 = tracker.getPeerByID(peerConnectionID);
             Thread.sleep(500);
             p1.establishConnection(peerConnectionID, p2.getHostname(), p2.getPort());
             Thread.sleep(500);

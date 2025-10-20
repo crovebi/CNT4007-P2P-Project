@@ -1,11 +1,9 @@
-package src.torrent_client;
+package torrent_client;
 import java.util.ArrayList;
-<<<<<<< Updated upstream
-=======
 import java.io.*;
 import java.net.*;
 import java.util.*;
->>>>>>> Stashed changes
+
 
 public class Peer {
     int peerID;
@@ -21,7 +19,18 @@ public class Peer {
         this.peerID = peerID;
         this.hostname = hostname;
         this.port = port;
-        System.arraycopy(hasChunks, 0, this.hasChunks, 0, hasChunks.length);
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getPeerID() {
+        return peerID;
     }
 
     void setNeighbors(ArrayList<Peer> neighbors){
@@ -35,8 +44,6 @@ public class Peer {
         }
         return chunkList;
     }
-<<<<<<< Updated upstream
-=======
 
     // Each peer must have its own server, so we create a it here and call it when needed
     // Use threads so it doesnt take forever
@@ -89,7 +96,6 @@ public class Peer {
             }
         }).start();
     }
->>>>>>> Stashed changes
 }
 
 //

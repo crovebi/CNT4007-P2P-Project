@@ -1,4 +1,4 @@
-package src.torrent_client;
+package torrent_client;
 import java.util.*;
 import java.io.*;
 import java.nio.file.*;

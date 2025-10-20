@@ -1,5 +1,5 @@
-package src.torrent_tracker;
-import src.torrent_client.Peer;
+package torrent_tracker;
+import torrent_client.Peer;
 import java.util.ArrayList;
 
 public class Tracker {
