@@ -1,7 +1,11 @@
 package src.torrent_client;
 import java.util.ArrayList;
+<<<<<<< Updated upstream
+=======
 import java.io.*;
 import java.net.*;
+import java.util.*;
+>>>>>>> Stashed changes
 
 public class Peer {
     int peerID;
@@ -9,23 +13,16 @@ public class Peer {
     int port;
     boolean[] hasChunks;
     ArrayList<Peer> neighbors;
+    Map<Integer, Socket> sockets = new HashMap<>();
+    Socket currentSocket;
+    PrintWriter out;
 
     public Peer(int peerID, String hostname, int port, boolean[] hasChunks) {
         this.peerID = peerID;
         this.hostname = hostname;
         this.port = port;
-        // Make a copy of the input array to avoid null issues
-        if (hasChunks != null) {
-            this.hasChunks = new boolean[hasChunks.length];
-            System.arraycopy(hasChunks, 0, this.hasChunks, 0, hasChunks.length);
-        } else {
-            this.hasChunks = new boolean[0];
-        }
+        System.arraycopy(hasChunks, 0, this.hasChunks, 0, hasChunks.length);
     }
-
-    public int getPeerID() { return peerID; }
-    public String getHostname() { return hostname; }
-    public int getPort() { return port; }
 
     void setNeighbors(ArrayList<Peer> neighbors){
         this.neighbors = neighbors;
@@ -38,16 +35,29 @@ public class Peer {
         }
         return chunkList;
     }
+<<<<<<< Updated upstream
+=======
 
     // Each peer must have its own server, so we create a it here and call it when needed
     // Use threads so it doesnt take forever
     public void start() {
         new Thread(() -> {
             try (ServerSocket serverSocket = new ServerSocket(port)) { // Starts listening on port
-                Socket socket = serverSocket.accept(); // Accept connection if found
-                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream())); // Read in bytes
-                String message = in.readLine(); // convert message to string
-                System.out.println("Received: " + message);
+
+                while (true) {
+                    Socket socket = serverSocket.accept(); // Accept connection if found
+
+                    new Thread(() -> {
+                        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) { // Read in bytes)
+                            String message;
+                            while ((message = in.readLine()) != null) {
+                                System.out.println("Peer " + peerID + " received: " + message);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).start();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -55,16 +65,31 @@ public class Peer {
     }
 
     //Each peer must also act as a client to connect other peer servers
-    public void establishConnection(String serverPeerHost, int serverPeerPort, String message) {
+    public void establishConnection(int peerConnectionId, String serverPeerHost, int serverPeerPort) {
         new Thread(() -> {
-            try (Socket socket = new Socket(serverPeerHost, serverPeerPort)) { // Connects to other Peer's server
-                PrintWriter out = new PrintWriter(socket.getOutputStream(), true); // Sends message over connection
-                out.println(message);
+            try { // Connects to other Peer's server
+                if (sockets != null && !sockets.containsKey(peerConnectionId)) {
+                    currentSocket = new Socket(serverPeerHost, serverPeerPort);
+                    sockets.put(peerConnectionId, currentSocket);
+                    out = new PrintWriter(currentSocket.getOutputStream(), true);
+                } else {currentSocket = sockets.get(peerConnectionId);
+                    out = new PrintWriter(currentSocket.getOutputStream(), true);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
     }
+
+    public void sendMessage(String message) {
+        new Thread(() -> {
+            if (out != null) {
+                out.println(message);
+                System.out.println("Message: "+ message +" sent ");
+            }
+        }).start();
+    }
+>>>>>>> Stashed changes
 }
 
 //
