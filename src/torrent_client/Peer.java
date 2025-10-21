@@ -9,7 +9,7 @@ public class Peer {
     int peerID;
     String hostname;
     int port;
-    boolean[] hasChunks;
+    boolean[] hasChunks = new boolean[4]; // for testing purposes, change later
     ArrayList<Peer> neighbors;
     Map<Integer, Socket> sockets = new HashMap<>();
     Socket currentSocket;
@@ -19,6 +19,7 @@ public class Peer {
         this.peerID = peerID;
         this.hostname = hostname;
         this.port = port;
+        this.hasChunks = hasChunks;
     }
 
     public String getHostname() {
@@ -31,6 +32,10 @@ public class Peer {
 
     public int getPeerID() {
         return peerID;
+    }
+
+    public boolean[] getHasChunks() {
+        return hasChunks;
     }
 
     void setNeighbors(ArrayList<Peer> neighbors){
@@ -86,6 +91,17 @@ public class Peer {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    // Returns a list of the piece indexes that the inputted peer has that the given peer needs
+    public ArrayList<Integer> checkPieces(Peer peer) {
+        ArrayList<Integer> indices = new ArrayList<>();
+        for (int i = 0; i < peer.hasChunks.length; i++) {
+            if (hasChunks[i] == false && peer.hasChunks[i] == true) {
+                indices.add(i);
+            }
+        }
+        return indices;
     }
 
     public void sendMessage(String message) {

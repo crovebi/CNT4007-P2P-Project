@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.util.Map;
+import java.util.ArrayList;
 import torrent_tracker.Tracker;
 
 public class Torrent {
@@ -51,6 +52,9 @@ public class Torrent {
             Thread.sleep(500);
             p1.establishConnection(peerConnectionID, p2.getHostname(), p2.getPort());
             Thread.sleep(500);
+
+            ArrayList<Integer> pieces = p1.checkPieces(p2);
+            System.out.println(pieces);
             p1.sendMessage("Hello from peer " + p1.getPeerID());
         } while (!buffer.isEmpty());
     }
